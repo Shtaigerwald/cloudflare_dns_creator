@@ -1,0 +1,13 @@
+services:
+
+  cloudflare-dns-creator:
+    build:
+      context: ./cloudflare-dns-creator
+    environment:
+      BASE_DOMAIN: ${CLOUDFLARE_DOMAIN}
+      DOMAIN_IP: ${IP_CONNECTED_TO_DOMEN}
+      TRAEFIK_AUTH: basic
+      TRAEFIK_USER: ${TRAEFIK_USER}
+      TRAEFIK_PASSWORD: ${TRAEFIK_PASSWORD}
+      CF_API_EMAIL: ${CLOUDFLARE_API_EMAIL?}
+      CF_API_KEY: ${CLOUDFLARE_API_KEY?}
