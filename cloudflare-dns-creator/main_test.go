@@ -10,42 +10,42 @@ import (
 var(
     email, emailExists = os.LookupEnv("CF_API_EMAIL")
     key, keyExists = os.LookupEnv("CF_API_KEY")
-    clouflare_domain, domainExists = os.LookupEnv("BASE_DOMAIN")
-    domain_ip, ipExists = os.LookupEnv("DOMAIN_IP")
+    clouflareDomain, domainExists = os.LookupEnv("BASE_DOMAIN")
+    domainIP, ipExists = os.LookupEnv("DOMAIN_IP")
 )
 
-// Тестируем функцию Get_dns_records_name
-func TestGet_dns_records_name_cloudflare(t *testing.T) {
-    fmt.Printf("Get dns records from domain '%s':\n", clouflare_domain)
-	lists_dns_records_name := cloudflareHelper.Get_dns_records_name()
+// Тестируем функцию GetDNSRecordsName
+func TestGetDNSRecordsName_cloudflare(t *testing.T) {
+    fmt.Printf("Get dns records from domain '%s':\n", clouflareDomain)
+	lists_dns_records_name := cloudflareHelper.GetDNSRecordsName()
     for _, name := range lists_dns_records_name{
         fmt.Println(name)
     }
 }
 
-func TestFind_zone_id_clouflare(t *testing.T) {
-    fmt.Printf("Domain: '%s' - ", clouflare_domain)
-	zoneID := cloudflareHelper.Find_zone_id(clouflare_domain)
+func TestFindZoneID_clouflare(t *testing.T) {
+    fmt.Printf("Domain: '%s' - ", clouflareDomain)
+	zoneID := cloudflareHelper.FindZoneID(clouflareDomain)
     fmt.Printf("Zone ID:%s\n",zoneID)
 }
 
-func TestFind_list_hosts_tobe_deleted_cloudflare(t *testing.T){
-    fmt.Printf("Get dns records from domain '%s':\n", clouflare_domain)
-    lists_dns_records_tobe_deleted := cloudflareHelper.Find_list_hosts_tobe_deleted()
+func TestFindHostsToBeDeleted_cloudflare(t *testing.T) {
+    fmt.Printf("Get dns records from domain '%s':\n", clouflareDomain)
+    lists_dns_records_tobe_deleted := cloudflareHelper.FindHostsToBeDeleted()
     for _, name := range lists_dns_records_tobe_deleted{
         fmt.Println(name)
     }
 }
 
-func TestRequest_to_traefik(t *testing.T){
+func TestRequestToTraefik(t *testing.T) {
     fmt.Println("Get json from traefik:")
-    jsonfromtraefik := traefikHelper.Request_to_traefik("/api/http/routers?per_page=999999999999999999")
+    jsonfromtraefik := traefikHelper.RequestToTraefik("/api/http/routers?per_page=999999999999999999")
     fmt.Println(jsonfromtraefik)
 }
 
-func TestGet_http_routes_traefik(t *testing.T){
+func TestGetHttpRoutes_traefik(t *testing.T) {
     fmt.Println("Get routes from Traefik:")
-    list_traefik_routes := traefikHelper.Get_http_routes()
+    list_traefik_routes := traefikHelper.GetHttpRoutes()
     for _, name := range list_traefik_routes{
       fmt.Println(name)
     }

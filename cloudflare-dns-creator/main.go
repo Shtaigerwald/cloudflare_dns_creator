@@ -29,14 +29,14 @@ func uniqueElements(list1, list2 []string) []string {
 
 func taskEvery200ms() {
 	for {
-        traefik_hosts := traefikHelper.Get_http_routes()
-        cloudflare_hosts := cloudflareHelper.Get_dns_records_name()
-        uniqueHosts := uniqueElements(traefik_hosts, cloudflare_hosts)
+        traefikHosts := traefikHelper.GetHttpRoutes()
+        cloudflareHosts := cloudflareHelper.GetDNSRecordsName()
+        uniqueHosts := uniqueElements(traefikHosts, cloudflareHosts)
         if len(uniqueHosts) != 0 {
             fmt.Println("Записи будут добавлены:", uniqueHosts)
             for _, uniqueHost := range uniqueHosts{
                 fmt.Printf("Запись будет добавлена: %s\n", uniqueHost)
-                cloudflareHelper.Create_dns_records(uniqueHost)
+                cloudflareHelper.CreateDNSRecords(uniqueHost)
             }
         }
 		time.Sleep(200 * time.Millisecond)
@@ -50,8 +50,8 @@ func taskDaily() {
 		nextMidnight := now.Add(time.Hour * 24)
 		nextMidnight = time.Date(nextMidnight.Year(), nextMidnight.Month(), nextMidnight.Day(), 0, 0, 0, 0, nextMidnight.Location())
 		durationUntilNextMidnight := nextMidnight.Sub(now)
-        dns_records_to_be_deleted := cloudflareHelper.Find_list_hosts_tobe_deleted()
-        cloudflareHelper.Delete_dns_record(dns_records_to_be_deleted)
+        dnsRecordsToBeDeleted := cloudflareHelper.FindHostsToBeDeleted()
+        cloudflareHelper.DeleteDNSRecord(dnsRecordsToBeDeleted)
 		time.Sleep(durationUntilNextMidnight)
 	}
 }

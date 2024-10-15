@@ -9,8 +9,8 @@ import (
 )
 
 var (
-    base_domain = os.Getenv("BASE_DOMAIN")
-    traefik_auth = os.Getenv("TRAEFIK_AUTH")
+    baseDomain  = os.Getenv("BASE_DOMAIN")
+    traefikAuth = os.Getenv("TRAEFIK_AUTH")
 
 )
 type TraefikConfig struct {
@@ -26,8 +26,8 @@ type TraefikConfig struct {
     }
 var configs []TraefikConfig
 
-func Get_http_routes() []string {
-    routes := Request_to_traefik("/api/http/routers?per_page=999999999999999999")
+func GetHttpRoutes() []string {
+    routes := RequestToTraefik("/api/http/routers?per_page=999999999999999999")
     err := json.Unmarshal([]byte(routes), &configs)
     if err != nil {
         fmt.Printf("Error parsing JSON: %v\n", err)
@@ -38,16 +38,16 @@ func Get_http_routes() []string {
         match := re.FindStringSubmatch(host.Rule)
         if len(match) > 1 {
             host := match[1]
-            addUnique(&uniqueDomains, host)
+            addUniqueDomainInList(&uniqueDomains, host)
         }
     }
     return uniqueDomains
 }
 
-func Request_to_traefik(route string) string {
-    traefikApiUrl := fmt.Sprintf("https://traefik.%s%s", base_domain, route)
+func RequestToTraefik(route string) string {
+    traefikApiUrl := fmt.Sprintf("https://traefik.%s%s", baseDomain, route)
     client := resty.New()
-    if traefik_auth == "basic"{
+    if traefikAuth == "basic"{
         resp, err := client.R().
             SetBasicAuth(os.Getenv("TRAEFIK_USER"), os.Getenv("TRAEFIK_PASSWORD")).
             Get(traefikApiUrl)
@@ -58,6 +58,6 @@ func Request_to_traefik(route string) string {
         responseBody := string(resp.Body())
         return responseBody
     }else{
-        panic(fmt.Sprintf("Unsupported auth %s", traefik_auth))
+        panic(fmt.Sprintf("Unsupported auth %s", traefikAuth))
     }
 }
